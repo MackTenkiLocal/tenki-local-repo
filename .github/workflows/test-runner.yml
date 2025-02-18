@@ -6,7 +6,7 @@ on:
 
 jobs:
   check-runner:
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04-small-1c-4g
     steps:
       - name: Check Runner Info
         run: |
