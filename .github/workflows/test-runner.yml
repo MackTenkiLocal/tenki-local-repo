@@ -1,0 +1,20 @@
+name: Test Runner
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  check-runner:
+    runs-on: self-hosted
+    steps:
+      - name: Check Runner Info
+        run: |
+          echo "Checking system details..."
+          uname -a
+          echo "Available disk space:"
+          df -h
+          echo "Environment Variables:"
+          env | sort
+      - name: Confirm Runner is Active
+        run: echo "Runner is working correctly!"
