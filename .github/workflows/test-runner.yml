@@ -1,20 +1,43 @@
-name: Test Runner
+name: Multi-step Workflow with Matrix
 
 on:
-  push:
   workflow_dispatch:
+    inputs:
+      runs_on:
+        description: 'Specify the runner to use'
+        required: true
+        type: string
+      sleep_time:
+        description: 'Specify sleep time in seconds'
+        required: true
+        type: number
 
 jobs:
-  check-runner:
-    runs-on: ubuntu-22.04-medium-2c-8g
+  parallel_jobs:
+    runs-on: ${{ github.event.inputs.runs_on }}
+    strategy:
+      matrix:
+        task: [1, 2, 3]
     steps:
-      - name: Check Runner Info
+      - name: Run Parallel Task ${{ matrix.task }}
         run: |
-          echo "Checking system details..."
-          uname -a
-          echo "Available disk space:"
-          df -h
-          echo "Environment Variables:"
-          env | sort
-      - name: Confirm Runner is Active
-        run: echo "Runner is working correctly!"
+          echo "Running Parallel Task ${{ matrix.task }}"
+          sleep ${{ github.event.inputs.sleep_time }}
+
+  sequential_job_1:
+    needs: parallel_jobs
+    runs-on: ${{ github.event.inputs.runs_on }}
+    steps:
+      - name: Run Sequential Task 1
+        run: |
+          echo "Running Sequential Task 1"
+          sleep ${{ github.event.inputs.sleep_time }}
+
+  sequential_job_2:
+    needs: sequential_job_1
+    runs-on: ${{ github.event.inputs.runs_on }}
+    steps:
+      - name: Run Sequential Task 2
+        run: |
+          echo "Running Sequential Task 2"
+          sleep ${{ github.event.inputs.sleep_time }}
