@@ -1,1 +1,1 @@
-# tenki-local-repoxx
+# tenki-local-repox
